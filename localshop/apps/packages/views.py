@@ -177,16 +177,21 @@ def download_file(request, name, pk, filename):
         else:
             release_file = models.ReleaseFile.objects.get(pk=pk)
 
-    # TODO: Use sendfile if enabled
-    response = HttpResponse(
-        FileWrapper(release_file.distribution.file),
-        content_type='application/force-download')
-    response['Content-Disposition'] = 'attachment; filename=%s' % (
-        release_file.filename)
-    size = release_file.distribution.file.size
-    if size:
-        response["Content-Length"] = size
-    return response
+    if settings.REDIRECT_DISTRIBUTION_URL:
+        response = redirect(
+            release_file.distribution.url,
+            content_type='application/force-download')
+        return response
+    else:
+        # TODO: Use sendfile if enabled
+        response = HttpResponse(release_file.distribution.file,
+            content_type='application/force-download')
+        response['Content-Disposition'] = 'attachment; filename=%s' % (
+            release_file.filename)
+        size = release_file.distribution.file.size
+        if size:
+            response["Content-Length"] = size
+        return response
 
 
 def handle_register_or_upload(post_data, files, user):

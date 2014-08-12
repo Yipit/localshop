@@ -247,6 +247,8 @@ class Base(Settings):
 
     LOCALSHOP_ISOLATED = False
 
+    REDIRECT_DISTRIBUTION_URL = False
+
 
 class TestConfig(Base):
     SECRET_KEY = "TEST-KEY"
