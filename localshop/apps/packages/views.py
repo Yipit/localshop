@@ -153,7 +153,7 @@ def download_file(request, name, pk, filename):
         return redirect(release_file.url)
 
     # TODO: Use sendfile if enabled
-    response = HttpResponse(release_file.distribution.file,
+    response = HttpResponse(release_file.distribution.file.read(),
         content_type='application/force-download')
     response['Content-Disposition'] = 'attachment; filename=%s' % (
         release_file.filename)
